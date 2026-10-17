@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - Expense Tracker{% endblock %}
+{% block content %}
+<h1>Dashboard</h1>
+
+<div class="budget budget-{{ budget_status }}">
+    Budget: {{ "%.2f"|format(total) }} / {{ "%.2f"|format(budget) }}
+    ({{ budget_percent }}% used) &mdash;
+    {% if budget_status == "over" %}You are over budget!{% elif budget_status == "warning" %}Careful, you are close to your budget.{% else %}You are within budget.{% endif %}
+</div>
+
+<div class="cards">
+    <div class="card">
+        <div class="card-label">Total spent</div>
+        <div class="card-value" id="stat-total">{{ "%.2f"|format(total) }}</div>
+    </div>
+    <div class="card">
+        <div class="card-label">Expenses</div>
+        <div class="card-value" id="stat-count">{{ count }}</div>
+    </div>
+    <div class="card">
+        <div class="card-label">Average</div>
+        <div class="card-value" id="stat-average">{{ "%.2f"|format(average) }}</div>
+    </div>
+    <div class="card">
+        <div class="card-label">Biggest expense</div>
+        <div class="card-value" id="stat-biggest">
+            {% if biggest %}{{ "%.2f"|format(biggest.amount) }}<small>{{ biggest.description }}</small>{% else %}-{% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="panels">
+    <section class="panel">
+        <h2>By category</h2>
+        {% for c in categories %}
+        <div class="bar-row">
+            <span class="bar-name">{{ c.name }}</span>
+            <div class="bar-track"><div class="bar-fill cat-{{ c.name|lower }}" style="width: {{ c.percent }}%"></div></div>
+            <span class="bar-value">{{ "%.2f"|format(c.total) }} ({{ c.percent }}%)</span>
+        </div>
+        {% else %}
+        <p class="empty">No data yet.</p>
+        {% endfor %}
+    </section>
+
+    <section class="panel">
+        <h2>By month</h2>
+        <div class="columns">
+            {% for m in months %}
+            <div class="column">
+                <div class="column-value">{{ "%.0f"|format(m.total) }}</div>
+                <div class="column-bar" style="height: {{ m.height }}px"></div>
+                <div class="column-label">{{ m.month }}</div>
+            </div>
+            {% else %}
+            <p class="empty">No data yet.</p>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+
+<section class="panel">
+    <h2>Latest expenses</h2>
+    <table>
+        <thead><tr><th>Date</th><th>Description</th><th>Category</th><th class="num">Amount</th></tr></thead>
+        <tbody>
+        {% for e in recent %}
+            <tr>
+                <td>{{ e.date }}</td>
+                <td>{{ e.description }}</td>
+                <td><span class="tag cat-{{ e.category|lower }}">{{ e.category }}</span></td>
+                <td class="num">{{ "%.2f"|format(e.amount) }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <p><a href="/expenses">See all expenses &rarr;</a></p>
+</section>
+{% endblock %}

@@ -1,0 +1,14 @@
+[
+  {"id": 1, "description": "Rent", "amount": 1100.0, "category": "Housing", "date": "2026-01-02"},
+  {"id": 2, "description": "Groceries", "amount": 86.4, "category": "Food", "date": "2026-01-05"},
+  {"id": 3, "description": "Metro pass", "amount": 49.9, "category": "Transport", "date": "2026-01-07"},
+  {"id": 4, "description": "Cinema", "amount": 24.0, "category": "Entertainment", "date": "2026-01-18"},
+  {"id": 5, "description": "Rent", "amount": 1100.0, "category": "Housing", "date": "2026-02-02"},
+  {"id": 6, "description": "Groceries", "amount": 92.75, "category": "Food", "date": "2026-02-06"},
+  {"id": 7, "description": "Pharmacy", "amount": 18.3, "category": "Health", "date": "2026-02-11"},
+  {"id": 8, "description": "Dinner with friends", "amount": 64.0, "category": "Food", "date": "2026-02-14"},
+  {"id": 9, "description": "Train ticket", "amount": 38.5, "category": "Transport", "date": "2026-02-20"},
+  {"id": 10, "description": "Rent", "amount": 1100.0, "category": "Housing", "date": "2026-03-02"},
+  {"id": 11, "description": "Concert", "amount": 75.0, "category": "Entertainment", "date": "2026-03-09"},
+  {"id": 12, "description": "Groceries", "amount": 101.2, "category": "Food", "date": "2026-03-12"}
+]
