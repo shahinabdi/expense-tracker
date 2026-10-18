@@ -1,0 +1,12 @@
+services:
+  api:
+    image: ${IMAGE:-expense-tracker:latest}
+    build: .
+    restart: unless-stopped
+    ports:
+      - "80:8000"
+    volumes:
+      - expenses-data:/data
+
+volumes:
+  expenses-data:
