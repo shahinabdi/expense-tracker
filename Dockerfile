@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 FROM python:3.12-slim AS builder
 COPY --from=ghcr.io/astral-sh/uv:0.5 /uv /usr/local/bin/uv
-ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
+ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy UV_PROJECT_ENVIRONMENT=/opt/venv
 WORKDIR /build
 COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-dev --no-install-project
@@ -16,7 +16,8 @@ FROM python:3.12-slim AS runtime
 ENV PATH="/opt/venv/bin:$PATH" PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 \
     EXPENSES_FILE=/data/expenses.json
 RUN useradd --system --uid 1000 app && mkdir /data && chown app /data
-COPY --from=builder /build/.venv /opt/venv
+COPY --chown=app app/data/expenses.json /data/expenses.json
+COPY --from=builder /opt/venv /opt/venv
 WORKDIR /srv
 COPY --chown=app app ./app
 USER app

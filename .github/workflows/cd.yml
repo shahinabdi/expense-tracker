@@ -79,6 +79,9 @@ jobs:
             export IMAGE
             docker compose pull
             docker compose up -d --remove-orphans
+            sleep 10
+            docker compose ps
+            docker compose logs --tail=30
             docker image prune -f
 
   test-deployed:
