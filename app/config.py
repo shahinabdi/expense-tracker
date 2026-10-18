@@ -1,4 +1,3 @@
-
 import os
 from pathlib import Path
 
@@ -15,6 +14,8 @@ MAX_DESCRIPTION_LENGTH = 100
 
 DEFAULT_SORT = "date_desc"
 DATE_FORMAT = "%Y-%m-%d"
+
+
 def get_data_file() -> Path:
     override = os.environ.get("EXPENSES_FILE")
     return Path(override) if override else BASE_DIR / "data" / "expenses.json"

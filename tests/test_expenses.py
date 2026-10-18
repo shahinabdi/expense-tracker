@@ -10,10 +10,17 @@ def descriptions_in_table(html):
 
 
 def make_expense(id, amount, category="Other", date="2026-01-01"):
-    return {"id": id, "description": f"Item {id}", "amount": amount, "category": category, "date": date}
+    return {
+        "id": id,
+        "description": f"Item {id}",
+        "amount": amount,
+        "category": category,
+        "date": date,
+    }
 
 
 # ---------- calculations ----------
+
 
 def test_stats_total_count_and_average(client):
     stats = client.get("/api/stats").json()
@@ -72,6 +79,7 @@ def test_budget_status(client, set_expenses, amount, expected_status, expected_p
 
 # ---------- filtering ----------
 
+
 def test_filter_by_category(client):
     response = client.get("/api/expenses", params={"category": "Food"})
 
@@ -99,12 +107,15 @@ def test_min_amount_filter_ignores_invalid_values(client):
 
 
 def test_filters_can_be_combined(client):
-    response = client.get("/api/expenses", params={"category": "Food", "month": "2026-01"})
+    response = client.get(
+        "/api/expenses", params={"category": "Food", "month": "2026-01"}
+    )
 
     assert [e["id"] for e in response.json()] == [2]
 
 
 # ---------- pages ----------
+
 
 def test_dashboard_shows_statistics(client):
     response = client.get("/")
@@ -123,7 +134,13 @@ def test_expenses_page_sorting_and_totals(client):
     highest_amount = client.get("/expenses", params={"sort": "amount_desc"}).text
     food_only = client.get("/expenses", params={"category": "Food"}).text
 
-    assert descriptions_in_table(newest_first) == ["Cinema", "Dinner out", "Bus ticket", "Groceries", "Rent"]
+    assert descriptions_in_table(newest_first) == [
+        "Cinema",
+        "Dinner out",
+        "Bus ticket",
+        "Groceries",
+        "Rent",
+    ]
     assert descriptions_in_table(highest_amount)[:2] == ["Rent", "Groceries"]
     assert 'id="result-count">2<' in food_only
     assert 'id="result-total">160.00<' in food_only
@@ -135,10 +152,16 @@ def test_static_stylesheet_is_served(client):
 
 # ---------- adding expenses ----------
 
+
 def test_add_expense_saves_and_redirects(client, expenses_file):
     response = client.post(
         "/expenses",
-        data={"description": "  Coffee  ", "amount": "3.456", "category": "Food", "date": "2026-03-01"},
+        data={
+            "description": "  Coffee  ",
+            "amount": "3.456",
+            "category": "Food",
+            "date": "2026-03-01",
+        },
         follow_redirects=False,
     )
 
@@ -157,13 +180,36 @@ def test_add_expense_saves_and_redirects(client, expenses_file):
 @pytest.mark.parametrize(
     "form, message",
     [
-        ({"description": "", "amount": "5", "category": "Food"}, "Description is required"),
-        ({"description": "x" * 101, "amount": "5", "category": "Food"}, "Description is too long"),
-        ({"description": "Tea", "amount": "abc", "category": "Food"}, "Amount must be a number"),
-        ({"description": "Tea", "amount": "nan", "category": "Food"}, "Amount must be a number"),
-        ({"description": "Tea", "amount": "0", "category": "Food"}, "Amount must be greater than 0"),
+        (
+            {"description": "", "amount": "5", "category": "Food"},
+            "Description is required",
+        ),
+        (
+            {"description": "x" * 101, "amount": "5", "category": "Food"},
+            "Description is too long",
+        ),
+        (
+            {"description": "Tea", "amount": "abc", "category": "Food"},
+            "Amount must be a number",
+        ),
+        (
+            {"description": "Tea", "amount": "nan", "category": "Food"},
+            "Amount must be a number",
+        ),
+        (
+            {"description": "Tea", "amount": "0", "category": "Food"},
+            "Amount must be greater than 0",
+        ),
         ({"description": "Tea", "amount": "5", "category": "Pets"}, "Unknown category"),
-        ({"description": "Tea", "amount": "5", "category": "Food", "date": "01/02/2026"}, "Date must be YYYY-MM-DD"),
+        (
+            {
+                "description": "Tea",
+                "amount": "5",
+                "category": "Food",
+                "date": "01/02/2026",
+            },
+            "Date must be YYYY-MM-DD",
+        ),
     ],
 )
 def test_add_expense_validation_errors(client, expenses_file, form, message):
